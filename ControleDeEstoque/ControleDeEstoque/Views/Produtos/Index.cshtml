@@ -1,0 +1,63 @@
+@model IEnumerable<ControleDeEstoque.Models.Produto>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Lista de produtos</h1>
+
+<p>
+    <a asp-action="Create">Adicionar Produto</a>
+</p>
+
+<!-- Barra de pesquisa -->
+<div class="mb-3">
+    <input type="text" id="campoBusca" class="form-control" placeholder="Pesquisar por nome ou categoria..." onkeyup="filtrar()" />
+</div>
+
+<table class="table" id="tabelaProdutos">
+    <thead>
+        <tr>
+            <th>Nome do Produto</th>
+            <th>Descrição</th>
+            <th>Preço</th>
+            <th>Quantidade em Estoque</th>
+            <th>Categoria</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(model => item.Nome)</td>
+                <td>@Html.DisplayFor(model => item.Descricao)</td>
+                <td>@Html.DisplayFor(model => item.Preco)</td>
+                <td>@Html.DisplayFor(model => item.QuantidadeEstoque)</td>
+                <td>@(item.Categoria?.Nome ?? "Sem categoria")</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id">Detalhes</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Deletar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    function filtrar() {
+        var busca = document.getElementById("campoBusca").value.toLowerCase();
+        var linhas = document.querySelectorAll("#tabelaProdutos tbody tr");
+
+        linhas.forEach(function (linha) {
+            var nome = linha.cells[0].textContent.toLowerCase();
+            var categoria = linha.cells[4].textContent.toLowerCase();
+            if (nome.includes(busca) || categoria.includes(busca)) {
+                linha.style.display = "";
+            } else {
+                linha.style.display = "none";
+            }
+        });
+    }
+</script>
